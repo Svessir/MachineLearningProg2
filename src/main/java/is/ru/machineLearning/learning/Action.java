@@ -1,4 +1,4 @@
-package is.ru.machineLearning;
+package is.ru.machineLearning.learning;
 
 /**
  * Created by Sverrir on 13.10.2016.

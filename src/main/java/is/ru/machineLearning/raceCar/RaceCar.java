@@ -1,4 +1,9 @@
-package is.ru.machineLearning;
+package is.ru.machineLearning.raceCar;
+
+import is.ru.machineLearning.ArrayIterator;
+import is.ru.machineLearning.learning.MarkovDecisionProcess;
+import is.ru.machineLearning.learning.StateTransition;
+import is.ru.machineLearning.math.Vector2D;
 
 import java.util.Iterator;
 
@@ -28,14 +33,14 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
     }
 
     /**
-     * @return an Iterator over all the states for the race car
+     * @return an Iterator over all the states for the race car.
      */
     public Iterator<RaceCarState> getStateIterator() {
         return new RaceCarStateIterator(states);
     }
 
     /**
-     * @return an Iterator over all the actions of the race car
+     * @return an Iterator over all the actions of the race car.
      */
     public Iterator<Vector2D> getActionIterator() {
         return new ArrayIterator<Vector2D>(actions);
@@ -51,10 +56,10 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
 
     /**
      * Returns the immediate reward of a given
-     * race car state
+     * race car state.
      *
-     * @param state a state of the race car
-     * @return The immediate reward for the state
+     * @param state a state of the race car.
+     * @return The immediate reward for the state.
      */
     public double getReward(RaceCarState state) {
         return 0;
@@ -64,9 +69,9 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * Returns an iterator over all the state transition possible
      * given a state and an action
      *
-     * @param state The state being transitioned from
-     * @param action The action being taken in the state
-     * @return An iterator over all the state transitions
+     * @param state The state being transitioned from.
+     * @param action The action being taken in the state.
+     * @return An iterator over all the state transitions.
      */
     public Iterator<StateTransition> getStateTransitionIterator(RaceCarState state, Vector2D action) {
         StateTransition[] transitions = { // TODO: change states[][][][]

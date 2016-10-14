@@ -1,4 +1,4 @@
-package is.ru.machineLearning;
+package is.ru.machineLearning.raceCar;
 
 import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 

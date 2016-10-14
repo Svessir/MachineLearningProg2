@@ -1,4 +1,4 @@
-package is.ru.machineLearning;
+package is.ru.machineLearning.learning;
 
 import java.util.Iterator;
 

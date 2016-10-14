@@ -1,4 +1,6 @@
-package is.ru.machineLearning;
+package is.ru.machineLearning.math;
+
+import is.ru.machineLearning.learning.Action;
 
 /**
  * Created by Sverrir on 12.10.2016.

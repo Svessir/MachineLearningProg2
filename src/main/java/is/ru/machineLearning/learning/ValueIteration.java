@@ -1,4 +1,4 @@
-package is.ru.machineLearning;
+package is.ru.machineLearning.learning;
 
 import java.util.Iterator;
 
@@ -13,7 +13,7 @@ public class ValueIteration {
 
     /**
      *
-     * @param markovDecisionProcess The markov decision process that needs to be solved
+     * @param markovDecisionProcess The markov decision process that needs to be solved.
      *
      * @param gamma The gamma value for the value iteration between 0 and 1. The gamma value
      *              determines how much the agent values future reward over immediate rewards.
@@ -38,7 +38,7 @@ public class ValueIteration {
     }
 
     /**
-     * Starts the value iteration
+     * Starts the value iteration.
      */
     public void solve() {
         double delta;

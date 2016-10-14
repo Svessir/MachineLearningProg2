@@ -1,4 +1,6 @@
-package is.ru.machineLearning;
+package is.ru.machineLearning.raceCar;
+
+import is.ru.machineLearning.learning.State;
 
 /**
  * Created by Sverrir on 14.10.2016.
