@@ -46,13 +46,15 @@ public class ValueIteration {
         do {
             delta = 0;
             Iterator<State> stateIterator = markovDecisionProcess.getStateIterator();
-
+            System.out.println("number of States: " + stateIterator);
+            int i = 0;
             while(stateIterator.hasNext()) {
+                i++;
                 State state = stateIterator.next();
 
                 double value = markovDecisionProcess.getValue(state);
-                Iterator<Action> actions = markovDecisionProcess.getActionIterator();
-                double newValue = Double.MIN_VALUE;
+                Iterator<Action> actions = markovDecisionProcess.getActionIterator(state);
+                double newValue = -Double.MAX_VALUE;
 
                 while (actions.hasNext()) {
                     Action action = actions.next();
@@ -63,7 +65,7 @@ public class ValueIteration {
                     while (transitions.hasNext()) {
                         StateTransition transition = transitions.next();
                         newValue = Math.max(newValue,
-                                transition.transitionProbability * (markovDecisionProcess.getReward(transition.statePrime)
+                                transition.transitionProbability * (markovDecisionProcess.getReward(transition)
                                 + gamma * markovDecisionProcess.getValue(transition.statePrime)));
                     }
                 }
@@ -74,6 +76,7 @@ public class ValueIteration {
                 // Update delta if the change in value for this state is the highest
                 delta = Math.max(delta, Math.abs(value - newValue));
             }
+            System.out.println("states iterated over: " + i);
         }while(delta > threshold);
     }
 }

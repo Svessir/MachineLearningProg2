@@ -7,9 +7,9 @@ import java.util.Iterator;
  */
 public interface MarkovDecisionProcess<S extends State, A extends Action> {
     Iterator<S> getStateIterator();
-    Iterator<A> getActionIterator();
+    Iterator<A> getActionIterator(S state);
     double getValue(S state);
-    double setValue(S state, double value);
-    double getReward(S state);
+    void setValue(S state, double value);
+    double getReward(StateTransition<S, A> transition);
     Iterator<StateTransition> getStateTransitionIterator(S state, A action);
 }
