@@ -6,7 +6,7 @@ import is.ru.machineLearning.math.Vector2D;
 /**
  * Created by Sverrir on 14.10.2016.
  */
-public class RaceCarState extends State {
+public class RaceCarState implements State {
     public final Vector2D position;
     public final Vector2D velocity;
 

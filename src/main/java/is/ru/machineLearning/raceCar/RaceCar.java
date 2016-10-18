@@ -93,7 +93,7 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @return The value of the state.
      */
     public double getValue(RaceCarState state) {
-        return currentValues[state.position.x][state.position.y][state.velocity.x + MIN_VX][state.velocity.x + MIN_VY];
+        return currentValues[state.position.x][state.position.y][state.velocity.x - MIN_VX][state.velocity.y - MIN_VY];
     }
 
     /**
@@ -103,7 +103,9 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @param value The new value of the state.
      */
     public void setValue(RaceCarState state, double value) {
-        newValues[state.position.x][state.position.y][state.velocity.x + MIN_VX][state.velocity.x + MIN_VY] = value;
+        newValues[state.position.x][state.position.y][state.velocity.x - MIN_VX][state.velocity.y - MIN_VY] = value;
+        //System.out.print(" setValue: " +  newValues[state.position.x][state.position.y][state.velocity.x - MIN_VX][state.velocity.x - MIN_VY]);
+        //System.out.println(" currentValue: " +  currentValues[state.position.x][state.position.y][state.velocity.x - MIN_VX][state.velocity.x - MIN_VY]);
     }
 
     /**
@@ -119,7 +121,7 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
         if(isOutsideOfTrack(transition))
             return -5;
         else if(primeTrackType == TrackType.FINISH)
-            return 5;
+            return 100;
 
         return -1;
     }
@@ -147,8 +149,20 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      */
     public void useValues() {
         currentValues = newValues;
-        newValues = new double[currentValues.length][currentValues[0].length]
-                [currentValues[0][0].length][currentValues[0][0][0].length];
+
+        //for(int x = 0; x < states.length; x++) {
+        //    for(int y = 0; y < states[0].length; y++) {
+        //        for(int vx = 0; vx < states[0][0].length; vx++) {
+        //            for(int vy = 0; vy < states[0][0][0].length; vy++) {
+        //                System.out.print(currentValues[x][y][vx][vy] + " ");
+        //            }
+        //            System.out.println();
+        //        }
+        //        System.out.println();
+        //    }
+        //}
+
+        newValues = new double[newValues.length][newValues[0].length][newValues[0][0].length][newValues[0][0][0].length];
     }
 
     /**

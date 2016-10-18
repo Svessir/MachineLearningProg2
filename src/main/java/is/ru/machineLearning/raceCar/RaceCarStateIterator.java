@@ -57,6 +57,8 @@ public class RaceCarStateIterator implements Iterator<RaceCarState>{
             currentState = states[currentState.position.x + 1][0][0][0];
         }
 
+        //System.out.println("x: " + currentState.position.x + " y: " + currentState.position.y + " vx: "
+        //        + currentState.velocity.x + " vy: " + currentState.velocity.y);
         return currentState;
     }
 

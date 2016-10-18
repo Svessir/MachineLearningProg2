@@ -56,7 +56,7 @@ public class ValueIterationTest {
 
     public static void main(String[] args) {
         RaceCar rc = new RaceCar(getTrack());
-        ValueIteration valueIteration = new ValueIteration(rc, 1, 0.00000001);
+        ValueIteration valueIteration = new ValueIteration(rc, 1, 0.001);
         valueIteration.solve();
     }
 }

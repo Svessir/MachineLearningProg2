@@ -46,7 +46,6 @@ public class ValueIteration {
         do {
             delta = 0;
             Iterator<State> stateIterator = markovDecisionProcess.getStateIterator();
-            //System.out.println("number of States: " + stateIterator);
             int i = 0;
             while(stateIterator.hasNext()) {
                 i++;
@@ -76,8 +75,8 @@ public class ValueIteration {
                 // Update delta if the change in value for this state is the highest
                 delta = Math.max(delta, Math.abs(value - newValue));
             }
-            //System.out.println("states iterated over: " + i);
             System.out.println("Delta: " + delta);
+            markovDecisionProcess.useValues();
         }while(delta > threshold);
     }
 }
