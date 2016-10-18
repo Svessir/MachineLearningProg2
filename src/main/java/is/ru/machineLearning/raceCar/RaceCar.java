@@ -13,8 +13,8 @@ import java.util.Iterator;
  */
 public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
 
-    private float currentValues[][][][];
-    private float newValues[][][][];
+    private double currentValues[][][][];
+    private double newValues[][][][];
     private RaceCarState[][][][] states;
     private TrackType[][] track;
 
@@ -46,10 +46,10 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
         states = new RaceCarState[track.length][track[0].length]
                 [Math.abs(MAX_VX) + Math.abs(MIN_VX) + 1][Math.abs(MAX_VY) + Math.abs(MIN_VY) + 1];
 
-        currentValues = new float[track.length][track[0].length]
+        currentValues = new double[track.length][track[0].length]
                 [Math.abs(MAX_VX) + Math.abs(MIN_VX) + 1][Math.abs(MAX_VY) + Math.abs(MIN_VY) + 1];
 
-        newValues = new float[track.length][track[0].length]
+        newValues = new double[track.length][track[0].length]
                 [Math.abs(MAX_VX) + Math.abs(MIN_VX) + 1][Math.abs(MAX_VY) + Math.abs(MIN_VY) + 1];
 
         for(int x = 0; x < states.length; x++) {
@@ -86,11 +86,25 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
         return viableActions.iterator();
     }
 
+    /**
+     * Gets a value of a state.
+     *
+     * @param state The state being queried for value.
+     * @return The value of the state.
+     */
     public double getValue(RaceCarState state) {
-        return state.getValue();
+        return currentValues[state.position.x][state.position.y][state.velocity.x + MIN_VX][state.velocity.x + MIN_VY];
     }
 
-    public void setValue(RaceCarState state, double value) { state.setValue(value);}
+    /**
+     * Assigns a value to a state.
+     *
+     * @param state The state that is being assigned a value.
+     * @param value The new value of the state.
+     */
+    public void setValue(RaceCarState state, double value) {
+        newValues[state.position.x][state.position.y][state.velocity.x + MIN_VX][state.velocity.x + MIN_VY] = value;
+    }
 
     /**
      * Returns the immediate reward for a given
@@ -129,9 +143,12 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
 
     /**
      * Stores the values that have been set as the current values
+     * of the states.
      */
     public void useValues() {
-
+        currentValues = newValues;
+        newValues = new double[currentValues.length][currentValues[0].length]
+                [currentValues[0][0].length][currentValues[0][0][0].length];
     }
 
     /**
