@@ -77,6 +77,7 @@ public class ValueIteration {
                 delta = Math.max(delta, Math.abs(value - newValue));
             }
             System.out.println("states iterated over: " + i);
+            System.out.println("Delta: " + delta);
         }while(delta > threshold);
     }
 }

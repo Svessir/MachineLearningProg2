@@ -49,6 +49,7 @@ public class ValueIterationTest {
                         {O,O,I,I,I,I,I,I,I,I,I,I,I,I,I,I,F,F,F,F,F,F},
                         {O,O,I,I,I,I,I,I,I,I,I,I,I,I,I,I,F,F,F,F,F,F},
                         {O,O,O,I,I,I,I,I,I,I,I,I,I,I,I,I,F,F,F,F,F,F}
+
                 };
         return track;
     }
