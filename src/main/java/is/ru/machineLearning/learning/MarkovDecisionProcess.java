@@ -15,4 +15,5 @@ public interface MarkovDecisionProcess<S extends State, A extends Action> {
     void setValue(S state, double value);
     double getReward(StateTransition<S, A> transition);
     Iterator<StateTransition> getStateTransitionIterator(S state, A action);
+    void useValues();
 }

@@ -13,8 +13,9 @@ import java.util.Iterator;
  */
 public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
 
+    private float currentValues[][][][];
+    private float newValues[][][][];
     private RaceCarState[][][][] states;
-
     private TrackType[][] track;
 
     private final int MAX_VX = 4;
@@ -45,11 +46,19 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
         states = new RaceCarState[track.length][track[0].length]
                 [Math.abs(MAX_VX) + Math.abs(MIN_VX) + 1][Math.abs(MAX_VY) + Math.abs(MIN_VY) + 1];
 
+        currentValues = new float[track.length][track[0].length]
+                [Math.abs(MAX_VX) + Math.abs(MIN_VX) + 1][Math.abs(MAX_VY) + Math.abs(MIN_VY) + 1];
+
+        newValues = new float[track.length][track[0].length]
+                [Math.abs(MAX_VX) + Math.abs(MIN_VX) + 1][Math.abs(MAX_VY) + Math.abs(MIN_VY) + 1];
+
         for(int x = 0; x < states.length; x++) {
             for(int y = 0; y < states[0].length; y++) {
                 for(int vx = 0; vx < states[0][0].length; vx++) {
                     for(int vy = 0; vy < states[0][0][0].length; vy++) {
                         states[x][y][vx][vy] = new RaceCarState(new Vector2D(x,y), new Vector2D(vx + MIN_VX, vy + MIN_VY));
+                        currentValues[x][y][vx][vy] = 0;
+                        newValues[x][y][vx][vy] = 0;
                     }
                 }
             }
@@ -119,6 +128,44 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
     }
 
     /**
+     * Stores the values that have been set as the current values
+     */
+    public void useValues() {
+
+    }
+
+    /**
+     * Get the optimal action for the current state
+     * of the car.
+     *
+     * @return the optimal action.
+     */
+    public Vector2D getOptimalPolicyAction() {
+        return null;
+    }
+
+
+    /**
+     * Set the current state of the car.
+     *
+     * @param state The state being set to current state.
+     */
+    public void setState(RaceCarState state) {
+
+    }
+
+    /**
+     * Apply an action to the car. Might
+     * cause the car to transition between
+     * different states.
+     *
+     * @param action The action being taken.
+     */
+    public void transition(Vector2D action) {
+
+    }
+
+    /**
      * Determines whether a position is out of the track bounds.
      *
      * @param position The position being tested.
@@ -172,6 +219,4 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
                 states[primePosition.x][primePosition.y][velocity.x - MIN_VX][velocity.y - MIN_VY];
         return new StateTransition<RaceCarState, Vector2D>(state, prime, action, transitionProbability);
     }
-
-
 }
