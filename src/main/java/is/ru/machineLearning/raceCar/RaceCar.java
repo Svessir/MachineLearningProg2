@@ -77,6 +77,8 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      */
     public Iterator<Vector2D> getActionIterator(RaceCarState state) {
         ArrayList<Vector2D> viableActions = new ArrayList<Vector2D>();
+        if(track[state.position.x][state.position.y] == TrackType.FINISH)
+            return viableActions.iterator();
         for(Vector2D action : actions) {
             Vector2D velocity = state.velocity.add(action);
             if(velocity.x >= MIN_VX && velocity.x <= MAX_VX &&
@@ -104,8 +106,6 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      */
     public void setValue(RaceCarState state, double value) {
         newValues[state.position.x][state.position.y][state.velocity.x - MIN_VX][state.velocity.y - MIN_VY] = value;
-        //System.out.print(" setValue: " +  newValues[state.position.x][state.position.y][state.velocity.x - MIN_VX][state.velocity.x - MIN_VY]);
-        //System.out.println(" currentValue: " +  currentValues[state.position.x][state.position.y][state.velocity.x - MIN_VX][state.velocity.x - MIN_VY]);
     }
 
     /**
@@ -116,12 +116,9 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @return the immediate reward for the transition.
      */
     public double getReward(StateTransition<RaceCarState, Vector2D> transition) {
-        TrackType primeTrackType = getStateTrackType(transition.statePrime);
-
-        if(isOutsideOfTrack(transition))
+        if(isOutsideOfTrack(transition)) {
             return -5;
-        else if(primeTrackType == TrackType.FINISH)
-            return 100;
+        }
 
         return -1;
     }
@@ -149,19 +146,6 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      */
     public void useValues() {
         currentValues = newValues;
-
-        //for(int x = 0; x < states.length; x++) {
-        //    for(int y = 0; y < states[0].length; y++) {
-        //        for(int vx = 0; vx < states[0][0].length; vx++) {
-        //            for(int vy = 0; vy < states[0][0][0].length; vy++) {
-        //                System.out.print(currentValues[x][y][vx][vy] + " ");
-        //            }
-        //            System.out.println();
-        //        }
-        //        System.out.println();
-        //    }
-        //}
-
         newValues = new double[newValues.length][newValues[0].length][newValues[0][0].length][newValues[0][0][0].length];
     }
 
@@ -244,10 +228,29 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
     private StateTransition<RaceCarState, Vector2D> getTransition(RaceCarState state, Vector2D action,
                                                                   Drift drift, double transitionProbability) {
         Vector2D velocity = state.velocity.add(action);
-        Vector2D actualAction = velocity.add(drift.getDrift());
+        Vector2D actualAction = velocity.length() > 0 ? velocity.add(drift.getDrift()) : velocity;
         Vector2D primePosition = state.position.add(actualAction);
-        RaceCarState prime = isOutOfBounds(primePosition) ? state :
-                states[primePosition.x][primePosition.y][velocity.x - MIN_VX][velocity.y - MIN_VY];
+
+        if(primePosition.x < 0)
+            primePosition.x = 0;
+        if(primePosition.x > track.length - 1)
+            primePosition.x = track.length - 1;
+        if(primePosition.y < 0)
+            primePosition.y = 0;
+        if(primePosition.y > track[0].length - 1)
+            primePosition.y = track[0].length - 1;
+
+        RaceCarState prime = states[primePosition.x][primePosition.y][velocity.x - MIN_VX][velocity.y - MIN_VY];
         return new StateTransition<RaceCarState, Vector2D>(state, prime, action, transitionProbability);
+    }
+
+    public void print() {
+        for(int x = 0; x < track.length; x++) {
+            for(int y = 0; y < track[0].length; y++) {
+                //System.out.print(track[x][y] + "=");
+                System.out.printf("%.1f ", currentValues[x][y][4][4]);
+            }
+            System.out.println();
+        }
     }
 }

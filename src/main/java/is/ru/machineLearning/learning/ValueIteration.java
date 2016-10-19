@@ -1,5 +1,7 @@
 package is.ru.machineLearning.learning;
 
+import is.ru.machineLearning.raceCar.RaceCarState;
+
 import java.util.Iterator;
 
 /**
@@ -42,7 +44,7 @@ public class ValueIteration {
      */
     public void solve() {
         double delta;
-
+        int j = 0;
         do {
             delta = 0;
             Iterator<State> stateIterator = markovDecisionProcess.getStateIterator();
@@ -53,7 +55,9 @@ public class ValueIteration {
 
                 double value = markovDecisionProcess.getValue(state);
                 Iterator<Action> actions = markovDecisionProcess.getActionIterator(state);
-                double newValue = -Double.MAX_VALUE;
+
+                // Setting this to zero if no action is possible at state, Assuming it is a terminal state.
+                double newValue = actions.hasNext() ? Double.NEGATIVE_INFINITY : 0;
 
                 while (actions.hasNext()) {
                     Action action = actions.next();
@@ -61,12 +65,14 @@ public class ValueIteration {
                     Iterator<StateTransition> transitions =
                             markovDecisionProcess.getStateTransitionIterator(state, action);
 
+                    double currentValue = 0;
                     while (transitions.hasNext()) {
                         StateTransition transition = transitions.next();
-                        newValue = Math.max(newValue,
-                                transition.transitionProbability * (markovDecisionProcess.getReward(transition)
-                                + gamma * markovDecisionProcess.getValue(transition.statePrime)));
+                        currentValue += transition.transitionProbability * (markovDecisionProcess.getReward(transition)
+                                + gamma * markovDecisionProcess.getValue(transition.statePrime));
                     }
+
+                    newValue = Math.max(currentValue, newValue);
                 }
 
                 // Update the state with the new value
@@ -75,8 +81,24 @@ public class ValueIteration {
                 // Update delta if the change in value for this state is the highest
                 delta = Math.max(delta, Math.abs(value - newValue));
             }
-            System.out.println("Delta: " + delta);
             markovDecisionProcess.useValues();
         }while(delta > threshold);
     }
 }
+
+/*
+if(((RaceCarState)(state)).position.x == 1 && ((RaceCarState)(state)).position.y == 0
+                                && ((RaceCarState)(state)).velocity.x >= 0 && ((RaceCarState)(state)).velocity.y >= 0) {
+
+                            if(currentValue != -1.0) {
+                                System.out.println("transitionProb: " + transition.transitionProbability);
+                                System.out.println("reward: " + markovDecisionProcess.getReward(transition));
+                                System.out.println("gamma: " + gamma);
+                                System.out.println("valuePrime: " + markovDecisionProcess.getValue(transition.statePrime));
+                                System.out.println("state: " + transition.state);
+                                System.out.println("action: " + action);
+                                System.out.println("statePrime: " + transition.statePrime);
+                                System.out.println();
+                            }
+                        }
+*/

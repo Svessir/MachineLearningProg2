@@ -22,4 +22,8 @@ public class RaceCarState implements State {
         RaceCarState other = (RaceCarState) obj;
         return position.equals(other.position) && velocity.equals(other.velocity);
     }
+
+    public String toString() {
+        return "position: " + position.toString() + " velocity: " + velocity.toString();
+    }
 }
