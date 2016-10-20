@@ -7,6 +7,7 @@ import is.ru.machineLearning.math.Vector2D;
 
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Random;
 
 /**
  * Created by Sverrir on 14.10.2016.
@@ -22,6 +23,9 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
     private final int MIN_VX = -4;
     private final int MAX_VY = 4;
     private final int MIN_VY = -4;
+
+
+    private RaceCarState currentState;
 
     private Vector2D[] actions =
             {
@@ -132,12 +136,7 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @return An iterator over all the state transitions.
      */
     public Iterator<StateTransition> getStateTransitionIterator(RaceCarState state, Vector2D action) {
-        StateTransition[] transitions = {
-                getTransition(state, action, Drift.NO_DRIFT, 0.50),     // Normal transition
-                getTransition(state, action, Drift.DRIFT_RIGHT, 0.25),  // Transition with drift to the right
-                getTransition(state, action, Drift.DRIFT_UP, 0.25)      // Transition with drift up
-        };
-        return new ArrayIterator<StateTransition>(transitions);
+        return new ArrayIterator<StateTransition>(getAllTransitions(state, action));
     }
 
     /**
@@ -156,7 +155,37 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @return the optimal action.
      */
     public Vector2D getOptimalPolicyAction() {
-        return null;
+        System.out.println(currentState);
+        if(track[currentState.position.x][currentState.position.y] == TrackType.FINISH)
+            return null;
+
+        Iterator<Vector2D> viableActions = getActionIterator(currentState);
+        Vector2D optimalAction = null;
+        double optimalValue = Double.NEGATIVE_INFINITY;
+
+        while(viableActions.hasNext()) {
+            Vector2D action = viableActions.next();
+
+            Vector2D vel = currentState.velocity.add(action);
+            Vector2D pos = currentState.position.add(vel);
+
+            if(pos.x < 0)
+                pos.x = 0;
+            if(pos.x > track.length - 1)
+                pos.x = track.length - 1;
+            if(pos.y < 0)
+                pos.y = 0;
+            if(pos.y > track[0].length - 1)
+                pos.y = track[0].length - 1;
+
+            double val  = currentValues[pos.x][pos.y][vel.x - MIN_VX][vel.y - MIN_VY];
+
+            if(val > optimalValue) {
+                optimalValue = val;
+                optimalAction = action;
+            }
+        }
+        return optimalAction;
     }
 
 
@@ -166,7 +195,7 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @param state The state being set to current state.
      */
     public void setState(RaceCarState state) {
-
+        this.currentState = state;
     }
 
     /**
@@ -177,7 +206,16 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @param action The action being taken.
      */
     public void transition(Vector2D action) {
+        Random random = new Random();
+        StateTransition<RaceCarState, Vector2D>[] transitions = getAllTransitions(currentState, action);
+        double probability = random.nextDouble();
 
+        if(probability <= 0.5)
+            currentState = transitions[0].statePrime;
+        else if(probability <= .75)
+            currentState = transitions[1].statePrime;
+        else
+            currentState = transitions[2].statePrime;
     }
 
     /**
@@ -244,13 +282,48 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
         return new StateTransition<RaceCarState, Vector2D>(state, prime, action, transitionProbability);
     }
 
+    /**
+     * @param state The current state.
+     * @param action The action being taken in the current state.
+     * @return All possible transitions for this state action pair.
+     */
+    private StateTransition[] getAllTransitions(RaceCarState state, Vector2D action) {
+        StateTransition[] transitions = {
+                getTransition(state, action, Drift.NO_DRIFT, 0.50),     // Normal transition
+                getTransition(state, action, Drift.DRIFT_RIGHT, 0.25),  // Transition with drift to the right
+                getTransition(state, action, Drift.DRIFT_UP, 0.25)      // Transition with drift up
+        };
+
+        return transitions;
+    }
+
+    /**
+     * Prints out the current values of the states with velocity 0.
+     */
     public void print() {
         for(int x = 0; x < track.length; x++) {
             for(int y = 0; y < track[0].length; y++) {
-                //System.out.print(track[x][y] + "=");
                 System.out.printf("%.1f ", currentValues[x][y][4][4]);
             }
             System.out.println();
         }
+    }
+
+    /**
+     * @return The current state of the car in a String.
+     */
+    @Override
+    public String toString() {
+        String s = "\n";
+        for(int x = 0; x < track.length; x++) {
+            for(int y = 0; y < track[0].length; y++) {
+                if(currentState.position.x == x && currentState.position.y == y)
+                    s += "X";
+                else
+                    s += track[x][y];
+            }
+            s += "\n";
+        }
+        return s;
     }
 }

@@ -44,13 +44,10 @@ public class ValueIteration {
      */
     public void solve() {
         double delta;
-        int j = 0;
         do {
             delta = 0;
             Iterator<State> stateIterator = markovDecisionProcess.getStateIterator();
-            int i = 0;
             while(stateIterator.hasNext()) {
-                i++;
                 State state = stateIterator.next();
 
                 double value = markovDecisionProcess.getValue(state);
@@ -85,20 +82,3 @@ public class ValueIteration {
         }while(delta > threshold);
     }
 }
-
-/*
-if(((RaceCarState)(state)).position.x == 1 && ((RaceCarState)(state)).position.y == 0
-                                && ((RaceCarState)(state)).velocity.x >= 0 && ((RaceCarState)(state)).velocity.y >= 0) {
-
-                            if(currentValue != -1.0) {
-                                System.out.println("transitionProb: " + transition.transitionProbability);
-                                System.out.println("reward: " + markovDecisionProcess.getReward(transition));
-                                System.out.println("gamma: " + gamma);
-                                System.out.println("valuePrime: " + markovDecisionProcess.getValue(transition.statePrime));
-                                System.out.println("state: " + transition.state);
-                                System.out.println("action: " + action);
-                                System.out.println("statePrime: " + transition.statePrime);
-                                System.out.println();
-                            }
-                        }
-*/
