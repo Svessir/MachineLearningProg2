@@ -48,7 +48,7 @@ public class ValueIterationTest {
 
     public static void main(String[] args) {
         RaceCar rc = new RaceCar(getTrack());
-        ValueIteration valueIteration = new ValueIteration(rc, 1, 0.00001);
+        ValueIteration valueIteration = new ValueIteration(rc, 1, 0.01);
         valueIteration.solve();
         rc.setState(new RaceCarState(new Vector2D(8,0), new Vector2D(0,0)));
         rc.print();

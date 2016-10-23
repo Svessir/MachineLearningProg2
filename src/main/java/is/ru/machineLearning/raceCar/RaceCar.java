@@ -304,6 +304,7 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
         for(int x = 0; x < track.length; x++) {
             for(int y = 0; y < track[0].length; y++) {
                 System.out.printf("%.1f ", currentValues[x][y][4][4]);
+                //System.out.print((int)currentValues[x][y][4][4]);
             }
             System.out.println();
         }

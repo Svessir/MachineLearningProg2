@@ -44,7 +44,9 @@ public class ValueIteration {
      */
     public void solve() {
         double delta;
+        int i = 0;
         do {
+            i++;
             delta = 0;
             Iterator<State> stateIterator = markovDecisionProcess.getStateIterator();
             while(stateIterator.hasNext()) {
@@ -80,5 +82,7 @@ public class ValueIteration {
             }
             markovDecisionProcess.useValues();
         }while(delta > threshold);
+
+        System.out.println("iterations: " + i);
     }
 }
