@@ -48,15 +48,25 @@ public class ValueIterationTest {
 
     public static void main(String[] args) {
         RaceCar rc = new RaceCar(getTrack());
-        ValueIteration valueIteration = new ValueIteration(rc, 1, 0.01);
+        float startTime = System.nanoTime();
+        ValueIteration valueIteration = new ValueIteration(rc, 1, 0);
         valueIteration.solve();
-        rc.setState(new RaceCarState(new Vector2D(8,0), new Vector2D(0,0)));
-        rc.print();
-        Vector2D currentAction = rc.getOptimalPolicyAction();
-        System.out.println(rc);
-        do {
-            rc.transition(currentAction);
-            System.out.println(rc);
-        }while((currentAction = rc.getOptimalPolicyAction()) != null);
+        System.out.println("Total time: " + (double)(System.nanoTime() - startTime)/1000000000);
+
+
+        for(int x = 3; x < 8; x++) // ALL starting x positions
+        {
+            rc.setState(new RaceCarState(new Vector2D(x,0), new Vector2D(0,0)));
+            System.out.println();
+            Vector2D currentAction = rc.getOptimalPolicyAction();
+            System.out.print("Starting position: ");
+            rc.printPosition();
+            do {
+                rc.transition(currentAction);
+                rc.printPosition();
+
+            }while((currentAction = rc.getOptimalPolicyAction()) != null);
+
+        }
     }
 }

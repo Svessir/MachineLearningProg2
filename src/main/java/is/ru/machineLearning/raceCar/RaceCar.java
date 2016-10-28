@@ -155,7 +155,6 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
      * @return the optimal action.
      */
     public Vector2D getOptimalPolicyAction() {
-        System.out.println(currentState);
         if(track[currentState.position.x][currentState.position.y] == TrackType.FINISH)
             return null;
 
@@ -326,5 +325,13 @@ public class RaceCar implements MarkovDecisionProcess<RaceCarState, Vector2D> {
             s += "\n";
         }
         return s;
+    }
+
+    /**
+     * Prints out the current position of the car.
+     */
+    public void printPosition() {
+        if(currentState != null)
+            System.out.println("currentPosition: " + currentState.position);
     }
 }
